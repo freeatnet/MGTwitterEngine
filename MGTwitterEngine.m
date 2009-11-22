@@ -1026,6 +1026,7 @@
                            responseType:MGTwitterStatuses];
 }
 
+#pragma mark -
 
 - (NSString *)getRetweetedByMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
 {
@@ -1056,6 +1057,8 @@
                            responseType:MGTwitterStatuses];
 }
 
+#pragma mark -
+
 - (NSString *)getRetweetedToMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
 {
 	return [self getRetweetedToMeSinceID:sinceID withMaximumID:0 startingAtPage:pageNum count:count];
@@ -1085,6 +1088,8 @@
                            responseType:MGTwitterStatuses];
 }
 
+#pragma mark -
+
 - (NSString *)getRetweetsOfMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
 {
 	return [self getRetweetsOfMeSinceID:sinceID withMaximumID:0 startingAtPage:pageNum count:count];
@@ -1113,7 +1118,6 @@
                             requestType:MGTwitterRetweetsOfMeRequest 
                            responseType:MGTwitterStatuses];
 }
-
 
 #pragma mark Status methods
 
@@ -1160,6 +1164,46 @@
                            responseType:MGTwitterStatus];
 }
 
+
+- (NSString *)sendRetweet:(unsigned long)updateID
+{
+	if (updateID == 0){
+		return nil;
+	}
+	
+	NSString *path = [NSString stringWithFormat:@"statuses/retweet/%u.%@", updateID, API_FORMAT];
+	
+	return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path 
+                        queryParameters:nil body:nil 
+                            requestType:MGTwitterUpdateSendRequest
+                           responseType:MGTwitterStatus];
+}
+
+#pragma mark -
+
+- (NSString *)getRetweets:(unsigned long)updateID
+{
+	return [self getRetweets:updateID count:0];
+}
+
+- (NSString *)getRetweets:(unsigned long)updateID count:(int)count
+{
+	if (updateID == 0) {
+		return nil;
+	}
+	
+	NSString *path = [NSString stringWithFormat:@"statuses/retweets/%u.%@", updateID, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if (count > 0) {
+		[params setObject:[NSString stringWithFormat:@"%u", count] forKey:@"count"];
+	}
+	
+	return [self _sendRequestWithMethod:nil path:path 
+                        queryParameters:params body:nil 
+                            requestType:MGTwitterUpdateGetRequest
+                           responseType:MGTwitterStatuses];
+}
 
 #pragma mark -
 

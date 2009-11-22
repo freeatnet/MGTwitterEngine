@@ -115,6 +115,10 @@
 - (NSString *)sendUpdate:(NSString *)status; // statuses/update
 - (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long)updateID; // statuses/update
 
+- (NSString *)sendRetweet:(unsigned long)updateID; // statuses/retweet
+- (NSString *)getRetweets:(unsigned long)updateID; // statuses/retweets
+- (NSString *)getRetweets:(unsigned long)updateID count:(int)count; // statuses/retweets
+
 - (NSString *)deleteUpdate:(unsigned long)updateID; // statuses/destroy
 
 - (NSString *)getFeaturedUsers; // statuses/features (undocumented, returns invalid JSON data)
