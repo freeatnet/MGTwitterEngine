@@ -15,8 +15,8 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Put your Twitter username and password here:
-    NSString *username = nil;
-    NSString *password = nil;
+    NSString *username = @"freeatnet";
+    NSString *password = @"1van0vtwit";
     
     // Most API calls require a name and password to be set...
     if (! username || ! password) {
@@ -42,7 +42,10 @@
 	#define TESTING_MESSAGE_ID 52182684
 	
 	//Status methods:
-	NSLog(@"getHomeTimelineFor: connectionIdentifier = %@", [twitterEngine getHomeTimelineSinceID:0 startingAtPage:0 count:20]);
+	//NSLog(@"getHomeTimelineFor: connectionIdentifier = %@", [twitterEngine getHomeTimelineSinceID:0 startingAtPage:0 count:20]);
+	
+	NSLog(@"getRetweetsByMe: connectionIdentifier = %@", [twitterEngine getRetweetedByMeSinceID:0 startingAtPage:0 count:0]);
+	NSLog(@"getRetweetsToMe: connectionIdentifier = %@", [twitterEngine getRetweetedToMeSinceID:0 startingAtPage:0 count:0]);
 	//NSLog(@"getUserTimelineFor: connectionIdentifier = %@", [twitterEngine getUserTimelineFor:TESTING_SECONDARY_USER sinceID:0 startingAtPage:0 count:3]);
 	//NSLog(@"getUpdate: connectionIdentifier = %@", [twitterEngine getUpdate:TESTING_ID]);
 	//NSLog(@"sendUpdate: connectionIdentifier = %@", [twitterEngine sendUpdate:[@"This is a test on " stringByAppendingString:[[NSDate date] description]]]);

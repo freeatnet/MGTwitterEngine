@@ -913,7 +913,7 @@
 #pragma mark REST API methods
 #pragma mark -
 
-#pragma mark Status methods
+#pragma mark Timeline methods
 
 
 - (NSString *)getPublicTimeline
@@ -1027,7 +1027,95 @@
 }
 
 
-#pragma mark -
+- (NSString *)getRetweetedByMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
+{
+	return [self getRetweetedByMeSinceID:sinceID withMaximumID:0 startingAtPage:pageNum count:count];
+}
+
+- (NSString *)getRetweetedByMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count
+{
+	NSString *path = [NSString stringWithFormat:@"statuses/retweeted_by_me.%@", API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    if (sinceID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", sinceID] forKey:@"since_id"];
+    }
+    if (maxID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", maxID] forKey:@"max_id"];
+    }
+    if (pageNum > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", pageNum] forKey:@"page"];
+    }
+    if (count > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
+    }
+	
+	
+    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+                            requestType:MGTwitterRetweetedByMeRequest 
+                           responseType:MGTwitterStatuses];
+}
+
+- (NSString *)getRetweetedToMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
+{
+	return [self getRetweetedToMeSinceID:sinceID withMaximumID:0 startingAtPage:pageNum count:count];
+}
+
+- (NSString *)getRetweetedToMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count
+{
+	NSString *path = [NSString stringWithFormat:@"statuses/retweeted_to_me.%@", API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    if (sinceID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", sinceID] forKey:@"since_id"];
+    }
+    if (maxID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", maxID] forKey:@"max_id"];
+    }
+    if (pageNum > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", pageNum] forKey:@"page"];
+    }
+    if (count > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
+    }
+	
+	
+    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+                            requestType:MGTwitterRetweetedToMeRequest 
+                           responseType:MGTwitterStatuses];
+}
+
+- (NSString *)getRetweetsOfMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count
+{
+	return [self getRetweetsOfMeSinceID:sinceID withMaximumID:0 startingAtPage:pageNum count:count];
+}
+
+- (NSString *)getRetweetsOfMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count
+{
+	NSString *path = [NSString stringWithFormat:@"statuses/retweets_of_me.%@", API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+    if (sinceID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", sinceID] forKey:@"since_id"];
+    }
+    if (maxID > 0) {
+        [params setObject:[NSString stringWithFormat:@"%u", maxID] forKey:@"max_id"];
+    }
+    if (pageNum > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", pageNum] forKey:@"page"];
+    }
+    if (count > 0) {
+        [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
+    }
+	
+	
+    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+                            requestType:MGTwitterRetweetsOfMeRequest 
+                           responseType:MGTwitterStatuses];
+}
+
+
+#pragma mark Status methods
 
 
 - (NSString *)getUpdate:(unsigned long)updateID

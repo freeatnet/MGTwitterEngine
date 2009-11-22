@@ -83,7 +83,7 @@
 // All methods below return a unique connection identifier.
 // ======================================================================================================
 
-// Status methods
+// Timeline methods
 
 - (NSString *)getPublicTimeline; // statuses/public_timeline
 
@@ -96,13 +96,24 @@
 - (NSString *)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/user_timeline & statuses/user_timeline/user
 - (NSString *)getUserTimelineFor:(NSString *)username sinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/user_timeline & statuses/user_timeline/user
 
-- (NSString *)getUpdate:(unsigned long)updateID; // statuses/show
-- (NSString *)sendUpdate:(NSString *)status; // statuses/update
-- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long)updateID; // statuses/update
-
 - (NSString *)getRepliesStartingAtPage:(int)pageNum; // statuses/mentions
 - (NSString *)getRepliesSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/mentions
 - (NSString *)getRepliesSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/mentions
+
+- (NSString *)getRetweetedByMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_by_me
+- (NSString *)getRetweetedByMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_by_me
+
+- (NSString *)getRetweetedToMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_to_me
+- (NSString *)getRetweetedToMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_to_me
+
+- (NSString *)getRetweetsOfMeSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_of_me
+- (NSString *)getRetweetsOfMeSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/retweets_of_me
+
+// Status methods
+
+- (NSString *)getUpdate:(unsigned long)updateID; // statuses/show
+- (NSString *)sendUpdate:(NSString *)status; // statuses/update
+- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long)updateID; // statuses/update
 
 - (NSString *)deleteUpdate:(unsigned long)updateID; // statuses/destroy
 
