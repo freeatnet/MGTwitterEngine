@@ -85,7 +85,7 @@
 
 // Timeline methods
 
-- (NSString *)getPublicTimeline; // statuses/public_timeline
+- (NSString *)getPublicTimeline __attribute__ ((deprecated)); // statuses/public_timeline
 
 - (NSString *)getHomeTimelineSinceID:(unsigned long long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/home_timeline
 - (NSString *)getHomeTimelineSinceID:(unsigned long long)sinceID withMaximumID:(unsigned long long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/home_timeline
