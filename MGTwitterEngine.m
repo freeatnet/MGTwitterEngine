@@ -37,7 +37,7 @@
 	#endif
 #endif
 
-#define TWITTER_DOMAIN          @"twitter.com"
+#define TWITTER_DOMAIN          @"api.twitter.com/1"
 #if YAJL_AVAILABLE
 	#define TWITTER_SEARCH_DOMAIN	@"search.twitter.com"
 #endif
@@ -529,6 +529,9 @@
 		case MGHTTPPUTMethod:
 			[theRequest setHTTPMethod:@"PUT"];
 			break;
+		case MGHTTPDELETEMethod:
+			[theRequest setHTTPMethod:@"DELETE"];
+			break;
 		case MGHTTPGETMethod:
 		default:
 			[theRequest setHTTPMethod:@"GET"];
@@ -923,6 +926,15 @@
 #pragma mark REST API methods
 #pragma mark -
 
+
+/***********************************************
+ *				REVIEW:
+ *		SEMI-REVIEWED DOWN FROM HERE
+ *	Checked for missing and deprecated methods
+ *	See respective header file for notes
+ ***********************************************/
+
+
 #pragma mark Timeline methods
 
 
@@ -1148,6 +1160,10 @@
 }
 
 
+// TODO: add statuses/update w/ geolocation arguments
+//- (NSString *)sendUpdate:(NSString *)status fromLocation:(NSArray *)latlong;
+
+
 - (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID
 {
     if (!status) {
@@ -1163,9 +1179,11 @@
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
     [params setObject:trimmedText forKey:@"status"];
+	
     if (updateID > 0) {
         [params setObject:[NSString stringWithFormat:@"%qu", updateID] forKey:@"in_reply_to_status_id"];
     }
+	
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
     
     return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path 
@@ -1575,6 +1593,11 @@
                            responseType:MGTwitterUser];
 }
 
+/***********************************************
+ *				REVIEW:
+ *			CHECKED DOWN FROM HERE
+ * Methods and parameters checked.
+ ***********************************************/
 
 #pragma mark -
 
@@ -1686,10 +1709,10 @@
 	if (!username) {
 		return nil;
 	}
-	
+
 	NSString *path = [NSString stringWithFormat:@"blocks/destroy/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPDELETEMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterBlockDisableRequest
                            responseType:MGTwitterUser];
 }
@@ -1717,6 +1740,13 @@
                            responseType:MGTwitterMiscellaneous];
 }
 
+
+
+/***********************************************
+ *				REVIEW:
+ *		NOT CHECKED DOWN FROM HERE
+ *				see notes
+ ***********************************************/
 
 #if YAJL_AVAILABLE
 

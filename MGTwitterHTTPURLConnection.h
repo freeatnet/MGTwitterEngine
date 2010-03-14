@@ -14,7 +14,8 @@ typedef enum _MGHTTPMethod {
 	MGHTTPGETMethod = 0,
 	MGHTTPHEADMethod,
 	MGHTTPPOSTMethod,
-	MGHTTPPUTMethod
+	MGHTTPPUTMethod,
+	MGHTTPDELETEMethod,
 	
 } MGHTTPMethod;
 
