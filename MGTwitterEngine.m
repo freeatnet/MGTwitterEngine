@@ -67,7 +67,7 @@
 - (NSString *)_encodeString:(NSString *)string;
 
 // Connection/Request methods
-- (NSString *)_sendRequestWithMethod:(NSString *)method 
+- (NSString *)_sendRequestWithMethod:(MGHTTPMethod)method 
                                 path:(NSString *)path 
                      queryParameters:(NSDictionary *)params
                                 body:(NSString *)body 
@@ -449,7 +449,7 @@
 
 #define SET_AUTHORIZATION_IN_HEADER 1
 
-- (NSString *)_sendRequestWithMethod:(NSString *)method 
+- (NSString *)_sendRequestWithMethod:(MGHTTPMethod)method 
                                 path:(NSString *)path 
                      queryParameters:(NSDictionary *)params 
                                 body:(NSString *)body 
@@ -521,9 +521,20 @@
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:finalURL 
                                                               cachePolicy:NSURLRequestReloadIgnoringCacheData 
                                                           timeoutInterval:URL_REQUEST_TIMEOUT];
-    if (method) {
-        [theRequest setHTTPMethod:method];
-    }
+	
+    switch (method) {
+		case MGHTTPPOSTMethod:
+			[theRequest setHTTPMethod:@"POST"];
+			break;
+		case MGHTTPPUTMethod:
+			[theRequest setHTTPMethod:@"PUT"];
+			break;
+		case MGHTTPGETMethod:
+		default:
+			[theRequest setHTTPMethod:@"GET"];
+			break;
+	}
+        
     [theRequest setHTTPShouldHandleCookies:NO];
     
     // Set headers for client information, for tracking purposes at Twitter.
@@ -542,8 +553,7 @@
 #endif
 
     // Set the request body if this is a POST request.
-    BOOL isPOST = (method && [method isEqualToString:HTTP_POST_METHOD]);
-    if (isPOST) {
+    if (method == MGHTTPPOSTMethod) {
         // Set request body, if specified (hopefully so), with 'source' parameter if appropriate.
         NSString *finalBody = @"";
 		if (body) {
@@ -920,7 +930,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"statuses/public_timeline.%@", API_FORMAT];
     
-	return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterPublicTimelineRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -952,7 +962,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterHomeTimelineRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -984,7 +994,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterFollowedTimelineRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -1021,7 +1031,7 @@
 		requestType = MGTwitterUserTimelineForUserRequest;
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:requestType 
                            responseType:MGTwitterStatuses];
 }
@@ -1052,7 +1062,7 @@
     }
 	
 	
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterRetweetedByMeRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -1083,7 +1093,7 @@
     }
 	
 	
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterRetweetedToMeRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -1114,7 +1124,7 @@
     }
 	
 	
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterRetweetsOfMeRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -1126,7 +1136,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"statuses/show/%qu.%@", updateID, API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterUpdateGetRequest
                            responseType:MGTwitterStatus];
 }
@@ -1158,7 +1168,7 @@
     }
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path 
                         queryParameters:params body:body 
                             requestType:MGTwitterUpdateSendRequest
                            responseType:MGTwitterStatus];
@@ -1173,7 +1183,7 @@
 	
 	NSString *path = [NSString stringWithFormat:@"statuses/retweet/%qu.%@", updateID, API_FORMAT];
 	
-	return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path 
+	return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path 
                         queryParameters:nil body:nil 
                             requestType:MGTwitterUpdateSendRequest
                            responseType:MGTwitterStatus];
@@ -1199,7 +1209,7 @@
 		[params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
 	}
 	
-	return [self _sendRequestWithMethod:nil path:path 
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path 
                         queryParameters:params body:nil 
                             requestType:MGTwitterUpdateGetRequest
                            responseType:MGTwitterStatuses];
@@ -1238,7 +1248,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterRepliesRequest 
                            responseType:MGTwitterStatuses];
 }
@@ -1251,7 +1261,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"statuses/destroy/%qu.%@", updateID, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterUpdateDeleteRequest
                            responseType:MGTwitterStatus];
 }
@@ -1264,7 +1274,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"statuses/featured.%@", API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterFeaturedUsersRequest 
                            responseType:MGTwitterUsers];
 }
@@ -1287,7 +1297,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", page] forKey:@"page"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:requestType 
                            responseType:MGTwitterUsers];
 }
@@ -1305,7 +1315,7 @@
         [params setObject:@"true" forKey:@"lite"]; // slightly bizarre, but correct.
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterFollowerUpdatesRequest
                            responseType:MGTwitterUsers];
 }
@@ -1321,7 +1331,7 @@
     }
     NSString *path = [NSString stringWithFormat:@"users/show/%@.%@", usernameOrID, API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterUserInformationRequest 
                            responseType:MGTwitterUser];
 }
@@ -1337,7 +1347,7 @@
         return nil;
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterUserInformationRequest 
                            responseType:MGTwitterUser];
 }
@@ -1369,7 +1379,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterDirectMessagesRequest 
                            responseType:MGTwitterDirectMessages];
 }
@@ -1400,7 +1410,7 @@
         [params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"count"];
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterDirectMessagesSentRequest 
                            responseType:MGTwitterDirectMessages];
 }
@@ -1427,7 +1437,7 @@
     [params setObject:username forKey:@"user"];
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path 
                         queryParameters:params body:body 
                             requestType:MGTwitterDirectMessageSendRequest
                            responseType:MGTwitterDirectMessage];
@@ -1438,7 +1448,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"direct_messages/destroy/%qu.%@", updateID, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterDirectMessageDeleteRequest 
                            responseType:MGTwitterDirectMessage];
 }
@@ -1455,7 +1465,7 @@
     }
     NSString *path = [NSString stringWithFormat:@"friendships/create/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterUpdatesEnableRequest 
                            responseType:MGTwitterUser];
 }
@@ -1469,7 +1479,7 @@
     }
     NSString *path = [NSString stringWithFormat:@"friendships/destroy/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterUpdatesDisableRequest 
                            responseType:MGTwitterUser];
 }
@@ -1486,7 +1496,7 @@
 	
     NSString *path = [NSString stringWithFormat:@"friendships/exists.%@", API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterUpdatesCheckRequest 
                            responseType:MGTwitterMiscellaneous];
 }
@@ -1499,7 +1509,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"account/verify_credentials.%@", API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterAccountRequest 
                            responseType:MGTwitterUser];
 }
@@ -1509,7 +1519,7 @@
 {
     NSString *path = @"account/end_session"; // deliberately no format specified
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterAccountRequest 
                            responseType:MGTwitterGeneric];
 }
@@ -1536,7 +1546,7 @@
     [params setObject:trimmedLocation forKey:@"location"];
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path 
                         queryParameters:params body:body 
                             requestType:MGTwitterAccountLocationRequest 
                            responseType:MGTwitterUser];
@@ -1560,7 +1570,7 @@
         [params setObject:deliveryMethod forKey:@"device"];
     }
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterAccountDeliveryRequest
                            responseType:MGTwitterUser];
 }
@@ -1573,7 +1583,7 @@
 {
 	NSString *path = [NSString stringWithFormat:@"account/rate_limit_status.%@", API_FORMAT];
 	
-	return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterAccountStatusRequest 
                            responseType:MGTwitterMiscellaneous];
 }
@@ -1596,7 +1606,7 @@
 		requestType = MGTwitterFavoritesForUserRequest;
     }
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:requestType 
                            responseType:MGTwitterStatuses];
 }
@@ -1619,7 +1629,7 @@
 		requestType = MGTwitterFavoritesDisableRequest;
 	}
 	
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:requestType 
                            responseType:MGTwitterStatus];
 }
@@ -1635,7 +1645,7 @@
     }
     NSString *path = [NSString stringWithFormat:@"notifications/follow/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterNotificationsEnableRequest 
                            responseType:MGTwitterUser];
 }
@@ -1648,7 +1658,7 @@
     }
     NSString *path = [NSString stringWithFormat:@"notifications/leave/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterNotificationsDisableRequest 
                            responseType:MGTwitterUser];
 }
@@ -1665,7 +1675,7 @@
 	
 	NSString *path = [NSString stringWithFormat:@"blocks/create/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterBlockEnableRequest
                            responseType:MGTwitterUser];
 }
@@ -1679,7 +1689,7 @@
 	
 	NSString *path = [NSString stringWithFormat:@"blocks/destroy/%@.%@", username, API_FORMAT];
     
-    return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterBlockDisableRequest
                            responseType:MGTwitterUser];
 }
@@ -1692,7 +1702,7 @@
 {
 	NSString *path = [NSString stringWithFormat:@"help/test.%@", API_FORMAT];
 	
-	return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterAccountRequest
                            responseType:MGTwitterMiscellaneous];
 }
@@ -1702,7 +1712,7 @@
 {
 	NSString *path = [NSString stringWithFormat:@"help/downtime_schedule.%@", API_FORMAT];
 	
-	return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterAccountRequest
                            responseType:MGTwitterMiscellaneous];
 }
@@ -1767,7 +1777,7 @@
 	*/
 
 	
-    return [self _sendRequestWithMethod:nil path:path queryParameters:params body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterSearchRequest 
                            responseType:MGTwitterSearchResults];
 }
@@ -1777,7 +1787,7 @@
 {
     NSString *path = [NSString stringWithFormat:@"trends/current.%@", API_FORMAT];
     
-    return [self _sendRequestWithMethod:nil path:path queryParameters:nil body:nil 
+    return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
                             requestType:MGTwitterSearchCurrentTrendsRequest 
                            responseType:MGTwitterSearchResults];
 }
