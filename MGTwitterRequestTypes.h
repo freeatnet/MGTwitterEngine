@@ -30,6 +30,7 @@ typedef enum _MGTwitterRequestType {
     MGTwitterDirectMessagesSentRequest, // latest direct messages from the current user
 	MGTwitterDirectMessageSendRequest, // send a new direct message from the current user
 	MGTwitterDirectMessageDeleteRequest, // delete a direct message to/from the current user
+	MGTwitterListCreateRequest, // create a new list
 	MGTwitterUpdatesEnableRequest, // enable status updates for specified user (e.g. follow)
 	MGTwitterUpdatesDisableRequest, // disable status updates for specified user (e.g. unfollow)
 	MGTwitterUpdatesCheckRequest, // check if the specified user is following another user
@@ -62,6 +63,8 @@ typedef enum _MGTwitterResponseType {
     MGTwitterGeneric            = 6,    // a generic response not requiring parsing
 	MGTwitterMiscellaneous		= 8,	// a miscellaneous response of key-value pairs
     MGTwitterImage              = 7,    // an image
+	MGTwitterList				= 10,	// exactly one list
+	MGTwitterLists				= 11,	// one or more lists
 #if YAJL_AVAILABLE
 	MGTwitterSearchResults		= 9,	// search results
 #endif

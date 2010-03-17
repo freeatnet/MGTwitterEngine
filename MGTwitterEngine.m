@@ -32,6 +32,7 @@
 	#else
 		#import "MGTwitterStatusesParser.h"
 		#import "MGTwitterUsersParser.h"
+		#import "MGTwitterListsParser.h"
 		#import "MGTwitterMessagesParser.h"
 		#import "MGTwitterMiscParser.h"
 	#endif
@@ -708,6 +709,12 @@
                               connectionIdentifier:identifier requestType:requestType 
                                       responseType:responseType];
             break;
+		case MGTwitterLists:
+		case MGTwitterList:
+			[MGTwitterListsParser parserWithXML:xmlData delegate:self 
+						   connectionIdentifier:identifier requestType:requestType 
+								   responseType:responseType];
+			break;
 		case MGTwitterMiscellaneous:
 			[MGTwitterMiscParser parserWithXML:xmlData delegate:self 
 						  connectionIdentifier:identifier requestType:requestType 
@@ -745,6 +752,11 @@
 			if ([self _isValidDelegateForSelector:@selector(userInfoReceived:forRequest:)])
 				[_delegate userInfoReceived:parsedObjects forRequest:identifier];
             break;
+		case MGTwitterLists:
+		case MGTwitterList:
+			if ([self _isValidDelegateForSelector:@selector(listsReceived:forRequest:)])
+				[_delegate listsReceived:parsedObjects forRequest:identifier];
+			break;
         case MGTwitterDirectMessages:
         case MGTwitterDirectMessage:
 			if ([self _isValidDelegateForSelector:@selector(directMessagesReceived:forRequest:)])
@@ -1368,6 +1380,62 @@
     return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
                             requestType:MGTwitterUserInformationRequest 
                            responseType:MGTwitterUser];
+}
+
+#pragma mark List methods
+
+- (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription {
+	NSString *path = [NSString stringWithFormat:@"%@/lists.%@", [self username], API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if(listName){
+		[params setObject:listName forKey:@"name"];
+	} else {
+		return nil;
+	}
+	
+	if (modePrivate) {
+		[params setObject:@"private" forKey:@"mode"];
+	} else {
+		[params setObject:@"public" forKey:@"mode"];
+	}
+	
+	if (listDescription) {
+		[params setObject:listDescription forKey:@"description"];
+	}
+	
+	NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
+
+	
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:body 
+                            requestType:MGTwitterListCreateRequest 
+                           responseType:MGTwitterList];
+}
+
+- (NSString *)updateListWithName:(NSString *)listName toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription {
+	NSString *path = [NSString stringWithFormat:@"%@/lists/%@.%@", [self username], listName, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if(newName){
+		[params setObject:newName forKey:@"name"];
+	}
+	
+	if (modePrivate) {
+		[params setObject:@"private" forKey:@"mode"];
+	} else {
+		[params setObject:@"public" forKey:@"mode"];
+	}
+	
+	if (listDescription) {
+		[params setObject:listDescription forKey:@"description"];
+	}
+	
+	NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
+	
+	
+    return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:body 
+                            requestType:MGTwitterListCreateRequest 
+                           responseType:MGTwitterList];
 }
 
 

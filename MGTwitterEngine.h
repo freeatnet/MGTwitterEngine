@@ -147,6 +147,10 @@
 /*
  Missing methods:
  List Methods
+ */
+- (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
+- (NSString *)updateListWithName:(NSString *)listName toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
+/*
  List Members Methods
  List Subscribers Methods
  */
