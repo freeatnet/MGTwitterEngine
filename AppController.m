@@ -44,8 +44,8 @@
 	//Status methods:
 	//NSLog(@"getHomeTimelineFor: connectionIdentifier = %@", [twitterEngine getHomeTimelineSinceID:0 startingAtPage:0 count:20]);
 	
-	NSLog(@"getRetweetsByMe: connectionIdentifier = %@", [twitterEngine getRetweetedByMeSinceID:0 startingAtPage:0 count:0]);
-	NSLog(@"getRetweetsToMe: connectionIdentifier = %@", [twitterEngine getRetweetedToMeSinceID:0 startingAtPage:0 count:0]);
+	//NSLog(@"getRetweetsByMe: connectionIdentifier = %@", [twitterEngine getRetweetedByMeSinceID:0 startingAtPage:0 count:0]);
+	//NSLog(@"getRetweetsToMe: connectionIdentifier = %@", [twitterEngine getRetweetedToMeSinceID:0 startingAtPage:0 count:0]);
 	//NSLog(@"getUserTimelineFor: connectionIdentifier = %@", [twitterEngine getUserTimelineFor:TESTING_SECONDARY_USER sinceID:0 startingAtPage:0 count:3]);
 	//NSLog(@"getUpdate: connectionIdentifier = %@", [twitterEngine getUpdate:TESTING_ID]);
 	//NSLog(@"sendUpdate: connectionIdentifier = %@", [twitterEngine sendUpdate:[@"This is a test on " stringByAppendingString:[[NSDate date] description]]]);
@@ -57,6 +57,17 @@
 	//NSLog(@"getFollowersIncludingCurrentStatus: connectionIdentifier = %@", [twitterEngine getFollowersIncludingCurrentStatus:YES]);
 	//NSLog(@"getUserInformationFor: connectionIdentifier = %@", [twitterEngine getUserInformationFor:TESTING_PRIMARY_USER]);
 
+	// List methods
+	NSString *listName = [NSString stringWithFormat:@"test%0.0f", [[NSDate date] timeIntervalSince1970]];
+	NSLog(@"createListWithName: connectionIdentifier = %@", [twitterEngine createListWithName:listName isPrivate:YES withDescription:@"This is a test list"]);
+	
+	NSLog(@"getListsFor: connectionIdentifier = %@", [twitterEngine getListsFor:username fromCursor:@"-1"]);
+	
+	NSLog(@"updateListWithName: connectionIdentifier = %@", [twitterEngine updateListWithSlug:listName toName:nil isPrivate:YES withDescription:@"This is a test private list"]);
+	NSLog(@"deleteList: connectionIdentifier = %@", [twitterEngine deleteList:listName]);
+	
+	//NSLog(@"getListsFor: connectionIdentifier = %@", [twitterEngine getListsFor:@"freeatnet" fromCursor:@"-1"]);
+	
 	// Direct Message methods:
 	//NSLog(@"getDirectMessagesSinceID: connectionIdentifier = %@", [twitterEngine getDirectMessagesSinceID:0 startingAtPage:0]);
 	//NSLog(@"getSentDirectMessagesSinceID: connectionIdentifier = %@", [twitterEngine getSentDirectMessagesSinceID:0 startingAtPage:0]);
@@ -96,6 +107,8 @@
 	// Help methods:
 	//NSLog(@"testService: connectionIdentifier = %@", [twitterEngine testService]);
 
+	
+	
 #if YAJL_AVAILABLE
 	// Search method
 	//NSLog(@"getSearchResultsForQuery: connectionIdentifier = %@", [twitterEngine getSearchResultsForQuery:TESTING_PRIMARY_USER sinceID:0 startingAtPage:1 count:20]);
@@ -135,6 +148,9 @@
     NSLog(@"Got statuses for %@:\r%@", connectionIdentifier, statuses);
 }
 
+- (void)listsReceived:(NSArray *)lists forRequest:(NSString *)connectionIdentifier {
+	NSLog(@"Got lists for %@: \r%@", connectionIdentifier, lists);
+}
 
 - (void)directMessagesReceived:(NSArray *)messages forRequest:(NSString *)connectionIdentifier
 {

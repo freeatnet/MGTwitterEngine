@@ -1412,8 +1412,8 @@
                            responseType:MGTwitterList];
 }
 
-- (NSString *)updateListWithName:(NSString *)listName toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription {
-	NSString *path = [NSString stringWithFormat:@"%@/lists/%@.%@", [self username], listName, API_FORMAT];
+- (NSString *)updateListWithSlug:(NSString *)listSlug toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription {
+	NSString *path = [NSString stringWithFormat:@"%@/lists/%@.%@", [self username], listSlug, API_FORMAT];
 	
 	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
 	if(newName){
@@ -1434,10 +1434,45 @@
 	
 	
     return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:body 
-                            requestType:MGTwitterListCreateRequest 
+                            requestType:MGTwitterListUpdateRequest 
                            responseType:MGTwitterList];
 }
 
+- (NSString *)getListsFor:(NSString *)username fromCursor:(NSString *)cursor {
+	NSString *path = [NSString stringWithFormat:@"%@/lists.%@", username, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if(cursor){
+		[params setObject:cursor forKey:@"cursor"];
+	}
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
+                            requestType:MGTwitterGetListsRequest 
+                           responseType:MGTwitterList];
+}
+
+- (NSString *)getListInfo:(NSString *)listSlug forUser:(NSString *)username {
+	NSString *path = [NSString stringWithFormat:@"%@/lists/%@.%@", username, listSlug, API_FORMAT];
+	
+	//NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:nil body:nil 
+                            requestType:MGTwitterGetListsRequest 
+                           responseType:MGTwitterList];
+}
+
+- (NSString *)deleteList:(NSString *)listSlug {
+	NSString *path = [NSString stringWithFormat:@"%@/lists/%@.%@", [self username], listSlug, API_FORMAT];
+	
+	/*NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	[params setObject:@"DELETE" forKey:@"_method"];
+	
+	NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];*/
+	
+	return [self _sendRequestWithMethod:MGHTTPDELETEMethod path:path queryParameters:nil body:nil 
+                            requestType:MGTwitterGetListsRequest 
+                           responseType:MGTwitterList];
+}
 
 #pragma mark Direct Message methods
 

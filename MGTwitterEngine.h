@@ -148,8 +148,14 @@
  Missing methods:
  List Methods
  */
+
+// List methods
 - (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
-- (NSString *)updateListWithName:(NSString *)listName toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
+- (NSString *)updateListWithSlug:(NSString *)listSlug toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
+- (NSString *)getListsFor:(NSString *)username fromCursor:(NSString *)cursor;
+- (NSString *)getListInfo:(NSString *)listSlug forUser:(NSString *)username;
+- (NSString *)deleteList:(NSString *)listSlug;
+
 /*
  List Members Methods
  List Subscribers Methods
