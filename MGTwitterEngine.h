@@ -150,11 +150,15 @@
  */
 
 // List methods
-- (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
-- (NSString *)updateListWithSlug:(NSString *)listSlug toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription;
+- (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription; // POST lists (create)
+- (NSString *)updateListWithSlug:(NSString *)listSlug toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription; // POST lists/ID (update)
 - (NSString *)getListsFor:(NSString *)username fromCursor:(NSString *)cursor;
 - (NSString *)getListInfo:(NSString *)listSlug forUser:(NSString *)username;
 - (NSString *)deleteList:(NSString *)listSlug;
+
+- (NSString *)getTimelineForList:(NSString *)listName fromUser:(NSString *)username sinceID:(unsigned long long)sinceID withMaximumID:(unsigned long long)maxID startingAtPage:(int)pageNum count:(int)count;
+- (NSString *)getListSubscriptionsFor:(NSString *)username fromCursor:(NSString *)cursor;
+- (NSString *)getListMembershipsFor:(NSString *)username fromCursor:(NSString *)cursor;
 
 /*
  List Members Methods

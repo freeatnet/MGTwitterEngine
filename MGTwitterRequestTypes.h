@@ -32,6 +32,8 @@ typedef enum _MGTwitterRequestType {
 	MGTwitterDirectMessageDeleteRequest, // delete a direct message to/from the current user
 	MGTwitterListCreateRequest, // create a new list
 	MGTwitterListUpdateRequest, // updates an existing list belonging to the current user
+	MGTwitterListTimelineRequest, // latest statuses from the list timeline
+	MGTwitterListSubscriptionsRequest, // get list of lists the user is subscribed to
 	MGTwitterGetListsRequest, // get a list of lists belonging to the specified user
 	MGTwitterUpdatesEnableRequest, // enable status updates for specified user (e.g. follow)
 	MGTwitterUpdatesDisableRequest, // disable status updates for specified user (e.g. unfollow)

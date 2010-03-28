@@ -1474,6 +1474,62 @@
                            responseType:MGTwitterList];
 }
 
+- (NSString *)getTimelineForList:(NSString *)listName fromUser:(NSString *)username sinceID:(unsigned long long)sinceID withMaximumID:(unsigned long long)maxID startingAtPage:(int)pageNum count:(int)count 
+{
+	NSString *path = [NSString stringWithFormat:@"%@/lists/%@/statuses.%@", username, listName, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	
+	if (sinceID) {
+		[params setObject:[NSString stringWithFormat:@"%qu", sinceID] forKey:@"since_id"];
+	}
+	
+	if (maxID) {
+		[params setObject:[NSString stringWithFormat:@"%qu", maxID] forKey:@"max_id"];
+	}
+	
+	if (pageNum) {
+		[params setObject:[NSString stringWithFormat:@"%d", pageNum] forKey:@"page"];
+	}
+	
+	if (count) {
+		[params setObject:[NSString stringWithFormat:@"%d", count] forKey:@"per_page"];
+	}
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
+                            requestType:MGTwitterListTimelineRequest 
+                           responseType:MGTwitterStatuses];
+}
+
+- (NSString *)getListSubscriptionsFor:(NSString *)username fromCursor:(NSString *)cursor 
+{
+	NSString *path = [NSString stringWithFormat:@"%@/lists/subscriptions.%@", username, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	
+	if (cursor) {
+		[params setObject:cursor forKey:@"cursor"];
+	}
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
+                            requestType:MGTwitterListSubscriptionsRequest 
+                           responseType:MGTwitterLists];
+}
+
+- (NSString *)getListMembershipsFor:(NSString *)username fromCursor:(NSString *)cursor
+{
+	NSString *path = [NSString stringWithFormat:@"%@/lists/memberships.%@", username, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if (cursor) {
+		[params setObject:cursor forKey:@"cursor"];
+	}
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
+                            requestType:MGTwitterGetListsRequest 
+                           responseType:MGTwitterLists];
+}
+
 #pragma mark Direct Message methods
 
 
