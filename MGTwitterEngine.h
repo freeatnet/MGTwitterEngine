@@ -144,11 +144,6 @@
 - (NSString *)getUserInformationForEmail:(NSString *)email; // users/show
 
 
-/*
- Missing methods:
- List Methods
- */
-
 // List methods
 - (NSString *)createListWithName:(NSString *)listName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription; // POST lists (create)
 - (NSString *)updateListWithSlug:(NSString *)listSlug toName:(NSString *)newName isPrivate:(BOOL)modePrivate withDescription:(NSString *)listDescription; // POST lists/ID (update)
@@ -162,6 +157,17 @@
 
 /*
  List Members Methods
+ */
+
+// List Members methods
+
+- (NSString *)getMembersOfList:(NSString *)listSlug fromCursor:(NSString *)cursor;
+- (NSString *)addUser:(NSString *)username toList:(NSString *)listSlug;
+- (NSString *)removeUser:(NSString *)username fromList:(NSString *)listSlug;
+
+
+
+/*
  List Subscribers Methods
  */
 

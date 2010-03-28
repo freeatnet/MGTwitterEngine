@@ -34,7 +34,11 @@ typedef enum _MGTwitterRequestType {
 	MGTwitterListUpdateRequest, // updates an existing list belonging to the current user
 	MGTwitterListTimelineRequest, // latest statuses from the list timeline
 	MGTwitterListSubscriptionsRequest, // get list of lists the user is subscribed to
-	MGTwitterGetListsRequest, // get a list of lists belonging to the specified user
+	MGTwitterListMembersRequest, // get list of lists the user is subscribed to
+	MGTwitterGetListsRequest, // TODO: write comments for these types
+	MGTwitterGetListMembersRequest, 
+	MGTwitterAddListMemberRequest, 
+	MGTwitterRemoveListMemberRequest, // remove specified user from the specified list
 	MGTwitterUpdatesEnableRequest, // enable status updates for specified user (e.g. follow)
 	MGTwitterUpdatesDisableRequest, // disable status updates for specified user (e.g. unfollow)
 	MGTwitterUpdatesCheckRequest, // check if the specified user is following another user

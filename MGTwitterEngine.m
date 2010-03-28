@@ -556,8 +556,10 @@
 	}
 #endif
 
-    // Set the request body if this is a POST request.
-    if (method == MGHTTPPOSTMethod) {
+    // Set the request body if this is not a HEAD/GET request.
+    if (method != MGHTTPHEADMethod && method != MGHTTPGETMethod) {
+
+		
         // Set request body, if specified (hopefully so), with 'source' parameter if appropriate.
         NSString *finalBody = @"";
 		if (body) {
@@ -571,6 +573,10 @@
         
         if (finalBody) {
             [theRequest setHTTPBody:[finalBody dataUsingEncoding:NSUTF8StringEncoding]];
+			
+			[theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+			[theRequest setValue:[NSString stringWithFormat:@"%d", [[theRequest HTTPBody] length]]
+			  forHTTPHeaderField:@"Content-Length"];
 #if DEBUG
 			if (YES) {
 				NSLog(@"MGTwitterEngine: finalBody = %@", finalBody);
@@ -1526,9 +1532,61 @@
 	}
 	
 	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
-                            requestType:MGTwitterGetListsRequest 
+                            requestType:MGTwitterListMembersRequest 
                            responseType:MGTwitterLists];
 }
+
+#pragma mark List Members methods
+
+
+- (NSString *)getMembersOfList:(NSString *)listURI fromCursor:(NSString *)cursor
+{
+	NSString *path = [NSString stringWithFormat:@"%@/members.%@", listURI, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if (cursor) {
+		[params setObject:cursor forKey:@"cursor"];
+	}
+	
+	return [self _sendRequestWithMethod:MGHTTPGETMethod path:path queryParameters:params body:nil 
+                            requestType:MGTwitterGetListMembersRequest 
+                           responseType:MGTwitterUsers];
+}
+
+- (NSString *)addUser:(NSString *)username toList:(NSString *)listSlug
+{
+	NSString *path = [NSString stringWithFormat:@"%@/%@/members.%@", [self username], listSlug, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if (username) {
+		[params setObject:username forKey:@"id"];
+	}
+	
+	NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
+	
+	return [self _sendRequestWithMethod:MGHTTPPOSTMethod path:path queryParameters:nil body:body 
+                            requestType:MGTwitterAddListMemberRequest 
+                           responseType:MGTwitterList];
+}
+
+
+- (NSString *)removeUser:(NSString *)username fromList:(NSString *)listSlug
+{
+	NSString *path = [NSString stringWithFormat:@"%@/%@/members.%@", [self username], listSlug, API_FORMAT];
+	
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:0];
+	if (username) {
+		[params setObject:username forKey:@"id"];
+	}
+	
+	NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
+	
+	return [self _sendRequestWithMethod:MGHTTPDELETEMethod path:path queryParameters:nil body:body 
+                            requestType:MGTwitterRemoveListMemberRequest 
+                           responseType:MGTwitterList];
+}
+
+
 
 #pragma mark Direct Message methods
 
