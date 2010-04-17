@@ -114,6 +114,8 @@
 - (NSString *)getUpdate:(unsigned long long)updateID; // statuses/show
 - (NSString *)sendUpdate:(NSString *)status; // statuses/update
 - (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID; // statuses/update
+- (NSString *)sendUpdate:(NSString *)status fromLocationLat:(float)locLat locationLong:(float)locLong; // statuses/update
+- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID fromLocationLat:(float)locLat locationLong:(float)locLong; // statuses/update
 
 - (NSString *)sendRetweet:(unsigned long long)updateID; // statuses/retweet
 - (NSString *)getRetweets:(unsigned long long)updateID; // statuses/retweets

@@ -1177,6 +1177,9 @@
     return [self sendUpdate:status inReplyTo:0 fromLocationLat:91.0 locationLong:181.0]; // 91.0, 181.0 are not valid and will not be included
 }
 
+- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID {
+	return [self sendUpdate:status inReplyTo:updateID fromLocationLat:91.0 locationLong:181.0];
+}
 
 - (NSString *)sendUpdate:(NSString *)status fromLocationLat:(float)locLat locationLong:(float)locLong
 {
@@ -1204,10 +1207,10 @@
         [params setObject:[NSString stringWithFormat:@"%qu", updateID] forKey:@"in_reply_to_status_id"];
     }
 	
-	if ((locationLat <= 90.0 && locationLat >= -90.0)
-		&& (locationLong <= 180.0 && locationLong >= -180.0)) {
-		[params setObject:[NSString stringWithFormat:@"%f", locationLat] forKey:@"lat"];
-		[params setObject:[NSString stringWithFormat:@"%f", locationLong] forKey:@"long"];
+	if ((locLat <= 90.0 && locLat >= -90.0)
+		&& (locLong <= 180.0 && locLong >= -180.0)) {
+		[params setObject:[NSString stringWithFormat:@"%f", locLat] forKey:@"lat"];
+		[params setObject:[NSString stringWithFormat:@"%f", locLong] forKey:@"long"];
 	}
 	
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
