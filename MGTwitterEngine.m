@@ -1174,15 +1174,17 @@
 
 - (NSString *)sendUpdate:(NSString *)status
 {
-    return [self sendUpdate:status inReplyTo:0];
+    return [self sendUpdate:status inReplyTo:0 fromLocationLat:91.0 locationLong:181.0]; // 91.0, 181.0 are not valid and will not be included
 }
 
 
-// TODO: add statuses/update w/ geolocation arguments
-//- (NSString *)sendUpdate:(NSString *)status fromLocation:(NSArray *)latlong;
+- (NSString *)sendUpdate:(NSString *)status fromLocationLat:(float)locLat locationLong:(float)locLong
+{
+	return [self sendUpdate:status inReplyTo:0 fromLocationLat:locLat locationLong:locLong];
+}
 
 
-- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID
+- (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long long)updateID fromLocationLat:(float)locLat locationLong:(float)locLong
 {
     if (!status) {
         return nil;
@@ -1201,6 +1203,12 @@
     if (updateID > 0) {
         [params setObject:[NSString stringWithFormat:@"%qu", updateID] forKey:@"in_reply_to_status_id"];
     }
+	
+	if ((locationLat <= 90.0 && locationLat >= -90.0)
+		&& (locationLong <= 180.0 && locationLong >= -180.0)) {
+		[params setObject:[NSString stringWithFormat:@"%f", locationLat] forKey:@"lat"];
+		[params setObject:[NSString stringWithFormat:@"%f", locationLong] forKey:@"long"];
+	}
 	
     NSString *body = [self _queryStringWithBase:nil parameters:params prefixed:NO];
     
